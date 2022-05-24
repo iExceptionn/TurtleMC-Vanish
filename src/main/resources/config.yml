@@ -42,24 +42,73 @@ config:
 # {prefix} - Player rank prefix
 # {message} - Message
 chat:
-  default:
-    format: "{prefix} &7{name} &8» &7{message}"
+  founder:
+    format: "{prefix} &f{name} &8» &f{message}"
     # For the tablist
-    prefix: "&9{prefix} &7{name}"
-    suffix: ""
-    priority: 9
-    default: true
-  developer:
-    format: "{prefix} &7{name} &8» &f{message}"
-    # For the tablist
-    prefix: "&9{prefix} &7{name}"
-    suffix: ""
-    priority: 2
-    default: true
-  owner:
-    format: "{prefix} &7{name} &8» &f{message}"
-    # For the tablist
-    prefix: "&9{prefix} &7{name}"
+    prefix: "&cOwner &F"
     suffix: ""
     priority: 1
+    default: false
+  developer:
+    format: "{prefix} &f{name} &8» &f{message}"
+    # For the tablist
+    prefix: "&3Developer &f"
+    suffix: ""
+    priority: 2
+    default: false
+  admin:
+    format: "{prefix} &f{name} &8» &f{message}"
+    # For the tablist
+    prefix: "&9Admin &f"
+    suffix: ""
+    priority: 3
+    default: false
+  moderator:
+    format: "{prefix} &f{name} &8» &f{message}"
+    # For the tablist
+    prefix: "&bModerator &f"
+    suffix: ""
+    priority: 4
+    default: false
+  helper:
+    format: "{prefix} &f{name} &8» &f{message}"
+    # For the tablist
+    prefix: "&eHelper &f"
+    suffix: ""
+    priority: 5
+    default: false
+  god:
+    format: "{prefix} &7{name} &8» &f{message}"
+    # For the tablist
+    prefix: "&4&lGod &7"
+    suffix: ""
+    priority: 6
+    default: false
+  legend:
+    format: "{prefix} &7{name} &8» &f{message}"
+    # For the tablist
+    prefix: "&5&lLegend &7"
+    suffix: ""
+    priority: 7
+    default: false
+  elite:
+    format: "{prefix} &7{name} &8» &f{message}"
+    # For the tablist
+    prefix: "&6&lElite &7"
+    suffix: ""
+    priority: 8
+    default: false
+  vip:
+    format: "{prefix} &7{name} &8» &f{message}"
+    # For the tablist
+    prefix: "&2&lVIP &7"
+    suffix: ""
+    priority: 9
+    default: false
+  default:
+    format: "&7{name} &8» &7{message}"
+    # For the tablist
+    prefix: "&7"
+    suffix: ""
+    priority: 10
     default: true
