@@ -1,0 +1,65 @@
+###########################################
+# Plugin has been written for TurtleMC.   #
+# Discord.turtlemc.nl                     #
+# Developer: iException#1823              #
+###########################################
+
+# Database login:
+database:
+  host: 127.0.0.1:3306
+  username: iException
+  password: 'is'
+  databasename: fantastisch
+
+config:
+  prefix:
+    enabled: true
+    prefix: "&a[VANISH] "
+  join-message:
+    # When joined in vanish, the join message is always disabled.
+    # Supports color codes with &, Use {rank} for the user rank, and {name} for the playername.
+    # Prefix will not be used for the join message.
+    enabled: true
+    message: "&7[&a+&7] {rank} &7{name}"
+  quit-message:
+    # When leaving in vanish, the quit message is always disabled.
+    # Supports color codes with &, Use {rank} for the user rank, and {name} for the playername.
+    # Prefix will not be used for the quit message.
+    enabled: true
+    message: "&7[&c-&7] {rank} &7{name}"
+  messages:
+    vanish: "&7You are now in &avanish&7."
+    vanish-all: "&f{name} &7is now in &avanish&7." # Message to everyone when vanishing. Use {name} for the player name.
+    vanish-join: "&f{name} &7has joined silenced in &avanish&7." # Message to everyone when joining vanished. Use {name} for the player name.
+    vanish-quit: "&f{name} &7has left silenced in &avanish&7." # Message to everyone when quiting vanished. Use {name} for the player name.
+    unvanish: "&7You are now &cunvanished&7."
+    unvanish-all: "&f{name} &7has &cunvanish&7." # Message to everyone when vanishing. Use {name} for the player name.
+    vanish-list: "&7Vanished staff: &f{staff}" # Staff names are always white. # Use {staff} for the staffmembers.
+    no-vanished-staff: "&7There aren't any vanished staffmembers."
+
+# Replacements:
+# {name} - Player name
+# {prefix} - Player rank prefix
+# {message} - Message
+chat:
+  default:
+    format: "{prefix} &7{name} &8» &7{message}"
+    # For the tablist
+    prefix: "&9{prefix} &7{name}"
+    suffix: ""
+    priority: 9
+    default: true
+  developer:
+    format: "{prefix} &7{name} &8» &f{message}"
+    # For the tablist
+    prefix: "&9{prefix} &7{name}"
+    suffix: ""
+    priority: 2
+    default: true
+  owner:
+    format: "{prefix} &7{name} &8» &f{message}"
+    # For the tablist
+    prefix: "&9{prefix} &7{name}"
+    suffix: ""
+    priority: 1
+    default: true
