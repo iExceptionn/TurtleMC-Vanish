@@ -215,16 +215,22 @@ public class UserManager implements IUser {
         return ChatUtils.format(cachedMetaData.getPrefix());
     }
 
+    public String getSuffix(UUID uuid) {
+
+        CachedMetaData cachedMetaData = luckPerms.getPlayerAdapter(Player.class).getMetaData(Bukkit.getServer().getPlayer(uuid));
+
+        return ChatUtils.format(cachedMetaData.getSuffix());
+    }
     public String getPlayerFormat(UUID uuid) {
         Player p = Bukkit.getServer().getPlayer(uuid);
         String userGroup = luckPerms.getPlayerAdapter(Player.class).getUser(p).getPrimaryGroup();
         for (String formats : ChatManager.chatFormats.keySet()) {
             if (formats.equalsIgnoreCase(userGroup)) {
-                return ChatUtils.format(ChatManager.chatFormats.get(formats)).replace("{name}", p.getName()).replace("{prefix}", getPrefix(p.getUniqueId()));
+                return ChatUtils.format(ChatManager.chatFormats.get(formats)).replace("{name}", p.getName()).replace("{prefix}", getPrefix(p.getUniqueId())).replace("{suffix}", getSuffix(p.getUniqueId()));
             }
         }
 
-        return ChatUtils.format(ChatManager.chatFormats.get("default").replace("{name}", p.getName()).replace("{prefix}", getPrefix(p.getUniqueId())));
+        return ChatUtils.format(ChatManager.chatFormats.get("default").replace("{name}", p.getName()).replace("{prefix}", getPrefix(p.getUniqueId())).replace("{suffix}", getSuffix(p.getUniqueId())));
     }
 
     public String getPlayerTabFormat(UUID uuid) {
