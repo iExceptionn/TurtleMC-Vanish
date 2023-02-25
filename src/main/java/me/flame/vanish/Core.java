@@ -1,12 +1,9 @@
 package me.flame.vanish;
 
 import com.zaxxer.hikari.HikariDataSource;
-import github.scarsz.discordsrv.DiscordSRV;
 import me.flame.vanish.players.chatmanager.ChatManager;
 import me.flame.vanish.players.chatmanager.listeners.ChatListener;
-import me.flame.vanish.players.commands.ReloadCommand;
-import me.flame.vanish.players.commands.UserInfoCommand;
-import me.flame.vanish.players.commands.VanishCommand;
+import me.flame.vanish.players.commands.*;
 import me.flame.vanish.players.listeners.InventoryListener;
 import me.flame.vanish.players.listeners.PlayerEvents;
 import me.flame.vanish.players.listeners.VanishedEvents;
@@ -27,7 +24,8 @@ public final class Core extends JavaPlugin implements Listener {
     public final DatabaseManager databaseManager = new DatabaseManager();
     private final ChatManager chatManager = new ChatManager();
     private final UserManager userManager = new UserManager();
-    private ChatListener chatListener = new ChatListener(this);
+
+    
 
 
     public static Core getInstance() {
@@ -41,9 +39,12 @@ public final class Core extends JavaPlugin implements Listener {
         FileManager.load(this, "config.yml");
         instance = this;
 
+
         // Database
         connectMysql();
         databaseManager.createDatabase();
+
+
 
         // Events / Commands
         registerEvents();
@@ -51,10 +52,8 @@ public final class Core extends JavaPlugin implements Listener {
         chatManager.loadChatFormat();
         chatManager.loadTabFormat();
 
-        DiscordSRV.api.subscribe(chatListener);
         ChatManager.getInstance().setScoreboard();
-
-
+        ChatManager.getInstance().refreshTimer();
     }
 
     @Override

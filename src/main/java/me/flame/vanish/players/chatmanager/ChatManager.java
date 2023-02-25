@@ -1,13 +1,16 @@
 package me.flame.vanish.players.chatmanager;
 
 import me.flame.vanish.Core;
+import me.flame.vanish.players.User;
 import me.flame.vanish.players.chatmanager.interfaces.IChatManager;
+import me.flame.vanish.players.managers.UserManager;
 import me.flame.vanish.utils.ChatUtils;
 import me.flame.vanish.utils.FileManager;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -95,6 +98,9 @@ public class ChatManager implements IChatManager {
                 String prefix = ChatUtils.format(rank.getPrefix());
                 String suffix = ChatUtils.format(rank.getSuffix());
 
+                target.setPlayerListHeader(ChatUtils.format(FileManager.get("config.yml").getString("config.prefix.tablist-header")));
+                target.setPlayerListFooter(ChatUtils.format(FileManager.get("config.yml").getString("config.prefix.tablist-footer")));
+
                 Team team = scoreboard.getTeam(name);
                 if (team == null) {
                     team = scoreboard.registerNewTeam(name);
@@ -105,9 +111,9 @@ public class ChatManager implements IChatManager {
                 }
 
                 ChatColor color = null;
-                if(prefix.endsWith(ChatUtils.format("&7"))){
+                if (prefix.endsWith(ChatUtils.format("&7"))) {
                     color = ChatColor.GRAY;
-                } else if (prefix.endsWith(ChatUtils.format("&f"))){
+                } else if (prefix.endsWith(ChatUtils.format("&f"))) {
                     color = ChatColor.WHITE;
                 } else {
                     color = ChatColor.RED;
@@ -132,6 +138,21 @@ public class ChatManager implements IChatManager {
         }
 
         Core.getInstance().getLogger().info("I have loaded " + tabFormats.size() + " tab formats.");
+    }
+
+    @Override
+    public void refreshTimer() {
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+
+                ChatManager.getInstance().setScoreboard();
+
+                refreshTimer();
+            }
+        }.runTaskLater(Core.getInstance(), 20 * 60);
     }
 
     public static ChatManager getInstance() {

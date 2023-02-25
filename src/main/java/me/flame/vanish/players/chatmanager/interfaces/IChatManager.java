@@ -6,4 +6,6 @@ public interface IChatManager {
 
     void loadChatFormat();
 
+    void refreshTimer();
+
 }

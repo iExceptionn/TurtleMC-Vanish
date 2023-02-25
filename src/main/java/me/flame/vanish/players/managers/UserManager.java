@@ -38,6 +38,7 @@ public class UserManager implements IUser {
                 preparedStatement.executeUpdate("INSERT INTO `staff_data` (`uuid`, `name`, `vanished`, `gamemode`, `nightvision`) VALUE ( '" + uuid + "' ,'" + Bukkit.getServer().getPlayer(uuid).getName() + "',0,'spectator',0)");
             }
 
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -66,6 +67,8 @@ public class UserManager implements IUser {
             } else {
                 createStaff(uuid);
             }
+
+            preparedStatement.close();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -94,6 +97,7 @@ public class UserManager implements IUser {
             preparedStatement.executeUpdate("UPDATE `staff_data` set `gamemode` = '" + user.getGamemode() + "' WHERE uuid = '" + uuid + "';");
             preparedStatement.executeUpdate("UPDATE `staff_data` set `nightvision` = '" + nightVision + "' WHERE uuid = '" + uuid + "';");
 
+            preparedStatement.close();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

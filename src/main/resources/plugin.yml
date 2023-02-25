@@ -6,7 +6,7 @@ prefix: VANISH
 authors: [ iException ]
 description: TurtleMC Vanish Plugin
 website: turtlemc.nl
-depend: [LuckPerms, DiscordSRV]
+depend: [LuckPerms]
 commands:
   vanish:
     aliases: [v, van]
