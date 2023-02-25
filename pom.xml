@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.flame.vanish</groupId>
-    <artifactId>TurtleMC-Vanish</artifactId>
+    <artifactId>Core</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>TurtleMC-Vanish</name>
+    <name>Core</name>
 
     <description>TurtleMC Vanish Plugin</description>
     <properties>

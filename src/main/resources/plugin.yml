@@ -1,4 +1,4 @@
-name: TurtleMC-Vanish
+name: Core
 version: '${project.version}'
 main: me.flame.vanish.Core
 api-version: 1.15
