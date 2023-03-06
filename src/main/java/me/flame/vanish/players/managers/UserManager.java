@@ -8,6 +8,7 @@ import me.flame.vanish.utils.ChatUtils;
 import me.flame.vanish.utils.FileManager;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.cacheddata.CachedMetaData;
+import net.luckperms.api.model.data.DataType;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;

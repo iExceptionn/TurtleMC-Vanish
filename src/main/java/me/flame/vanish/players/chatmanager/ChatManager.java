@@ -152,7 +152,7 @@ public class ChatManager implements IChatManager {
 
                 refreshTimer();
             }
-        }.runTaskLater(Core.getInstance(), 1);
+        }.runTaskLater(Core.getInstance(), 20 * 30);
     }
 
     public static ChatManager getInstance() {

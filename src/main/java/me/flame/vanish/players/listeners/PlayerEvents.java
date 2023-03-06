@@ -40,12 +40,12 @@ public class PlayerEvents implements Listener {
         if (FileManager.get("config.yml").getBoolean("config.join-message.enabled")) {
             if (user != null) {
                 if (!user.getVanished()) {
-                    e.setJoinMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.join-message.message")).replace("{name}", p.getName()).replace("{rank}", userManager.getPrefix(p.getUniqueId())));
+                    e.setJoinMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.join-message.message")).replace("{name}", p.getName()).replace("{rank}", userManager.getPrefix(p.getUniqueId())).replace("{suffix}", userManager.getSuffix(p.getUniqueId())));
                 } else {
                     e.setJoinMessage(null);
                 }
             } else {
-                e.setJoinMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.join-message.message")).replace("{name}", p.getName()).replace("{name}", p.getName()).replace("{rank}", userManager.getPrefix(p.getUniqueId())));
+                e.setJoinMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.join-message.message")).replace("{name}", p.getName()).replace("{name}", p.getName()).replace("{rank}", userManager.getPrefix(p.getUniqueId())).replace("{suffix}", userManager.getSuffix(p.getUniqueId())));
             }
         }
 
@@ -58,21 +58,12 @@ public class PlayerEvents implements Listener {
                 } else {
                     if (online.hasPermission("vanish.see")) {
                         if (online != p) {
-                            online.sendMessage(ChatUtils.format(Core.getPrefix() + FileManager.get("config.yml").getString("config.messages.vanish-join").replace("{name}", p.getName())));
+                            online.sendMessage(ChatUtils.format(Core.getPrefix() + FileManager.get("config.yml").getString("config.messages.vanish-join").replace("{name}", p.getName()).replace("{suffix}", userManager.getSuffix(p.getUniqueId()))));
                         }
                     }
                 }
             }
         }
-
-        Bukkit.getScheduler().runTaskLater(Core.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                ChatManager.getInstance().setScoreboard();
-            }
-        }, 20L);
-
-
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -83,12 +74,12 @@ public class PlayerEvents implements Listener {
         if (FileManager.get("config.yml").getBoolean("config.quit-message.enabled")) {
             if (user != null) {
                 if (!user.getVanished()) {
-                    e.setQuitMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.quit-message.message")).replace("{name}", p.getName()).replace("{name}", p.getName()).replace("{rank}", userManager.getPrefix(p.getUniqueId())));
+                    e.setQuitMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.quit-message.message")).replace("{name}", p.getName()).replace("{name}", p.getName()).replace("{rank}", userManager.getPrefix(p.getUniqueId())).replace("{suffix}", userManager.getSuffix(p.getUniqueId())));
                 } else {
                     e.setQuitMessage(null);
                 }
             } else {
-                e.setQuitMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.quit-message.message")).replace("{name}", p.getName()).replace("{name}", p.getName()).replace("{rank}", userManager.getPrefix(p.getUniqueId())));
+                e.setQuitMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.quit-message.message")).replace("{name}", p.getName()).replace("{name}", p.getName()).replace("{rank}", userManager.getPrefix(p.getUniqueId())).replace("{suffix}", userManager.getSuffix(p.getUniqueId())));
             }
         }
 
@@ -102,7 +93,7 @@ public class PlayerEvents implements Listener {
 
                 for (Player online : Bukkit.getServer().getOnlinePlayers()) {
                     if (online.hasPermission("vanish.see")) {
-                        online.sendMessage(ChatUtils.format(Core.getPrefix() + FileManager.get("config.yml").getString("config.messages.vanish-quit").replace("{name}", p.getName())));
+                        online.sendMessage(ChatUtils.format(Core.getPrefix() + FileManager.get("config.yml").getString("config.messages.vanish-quit").replace("{name}", p.getName()).replace("{suffix}", userManager.getSuffix(p.getUniqueId()))));
                     }
                 }
             }

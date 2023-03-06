@@ -45,7 +45,7 @@ public class InventoryListener implements Listener {
             e.setCancelled(true);
             if (e.getCurrentItem().getType() == Material.GRASS_BLOCK) {
                 if (p.hasPermission("vanish.creative")) {
-                    user.setGamemode("Creative");
+                    user.setGamemode("creative");
                     if (user.getVanished()) {
                         p.setGameMode(GameMode.CREATIVE);
                     }
@@ -56,7 +56,7 @@ public class InventoryListener implements Listener {
             }
             if (e.getCurrentItem().getType() == Material.PLAYER_HEAD) {
                 if (p.hasPermission("vanish.spectator")) {
-                    user.setGamemode("Spectator");
+                    user.setGamemode("spectator");
                     if (user.getVanished()) {
                         p.setGameMode(GameMode.SPECTATOR);
                     }
