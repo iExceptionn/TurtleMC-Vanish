@@ -1,0 +1,36 @@
+###########################################
+##    © Plugin created by iException ©    #
+###########################################
+
+config:
+  prefix: "&8[#D29C00CC&8] &7"
+  prefix-cooldown: 30 # IN DAYS
+  permissions:
+    set-prefix: "donator.setprefix"
+    set-displayname: "donator.setdisplayname"
+    admin-userinfo: "donator.admin"
+  messages:
+    no-permissions: "&7You do not have permissions to use this command."
+    displayname-set: "&7You have changed your display name to: %displayname%&7."
+    displayname-changed-staff: "&7You're displayname has been changed by a staff member."
+    prefix-changed: "&7You have changed your prefix to: %prefix%&7."
+    prefix-changed-staff: "&7You're prefix has been changed by a staff member."
+    change-prefix-info:
+      - "&7"
+      - " &7You are about to change your prefix."
+      - " &7You are only allowed to change your prefix once every &c30 days&7."
+      - " &7"
+      - " %prefix% &f%displayname% &8» &fThis is your new layout."
+      - " &7Type: &c/prefix confirm &7to change your prefix."
+      - " &7"
+  disabled-names:
+    - "kanker"
+    - "flikker"
+  disabled-prefixes:
+    - "owner"
+    - "developer"
+    - "admin"
+    - "moderator"
+    - "helper"
+    - "staff"
+    - "media"
