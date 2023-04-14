@@ -1,6 +1,8 @@
 package me.flame.vanish.players.managers;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.flame.vanish.Core;
+import me.flame.vanish.donators.managers.DonatorManager;
 import me.flame.vanish.players.User;
 import me.flame.vanish.players.chatmanager.ChatManager;
 import me.flame.vanish.players.interfaces.IUser;
@@ -25,8 +27,8 @@ public class UserManager implements IUser {
     private static ArrayList<User> loadedStaff = new ArrayList<>();
     public static ArrayList<String> isVanished = new ArrayList<>();
     public static HashMap<UUID, GameMode> playerGamemode = new HashMap<>();
-
-    LuckPerms luckPerms = Bukkit.getServer().getServicesManager().load(LuckPerms.class);
+    private final DonatorManager donatorManager = new DonatorManager();
+    LuckPerms luckPerms = Core.getApi();
 
     @Override
     public void createStaff(UUID uuid) {
@@ -124,12 +126,12 @@ public class UserManager implements IUser {
             for (Player all : Bukkit.getServer().getOnlinePlayers()) {
                 if (message) {
                     if (FileManager.get("config.yml").getBoolean("config.quit-message.enabled")) {
-                        all.sendMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.quit-message.message")).replace("{name}", p.getName()).replace("{name}", p.getName()).replace("{rank}", getPrefix(p.getUniqueId())));
+                        all.sendMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.quit-message.message")).replace("{name}", p.getName()).replace("{name}", p.getName()).replace("{rank}", getPrefix(p.getUniqueId())).replace("{suffix}", getSuffix(p.getUniqueId())));
                     }
                 }
                 if (all.hasPermission("vanish.see")) {
                     if (all != p) {
-                        all.sendMessage(ChatUtils.format(Core.getPrefix() + FileManager.get("config.yml").getString("config.messages.vanish-all").replace("{name}", p.getName())));
+                        all.sendMessage(ChatUtils.format(Core.getPrefix() + FileManager.get("config.yml").getString("config.messages.vanish-all").replace("{name}", p.getName()).replace("{suffix}", getSuffix(p.getUniqueId()))));
                     }
                 } else {
                     all.hidePlayer(Core.getInstance(), p);
@@ -140,7 +142,7 @@ public class UserManager implements IUser {
         } else {
             for (Player all : Bukkit.getServer().getOnlinePlayers()) {
                 if (FileManager.get("config.yml").getBoolean("config.quit-message.enabled")) {
-                    all.sendMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.quit-message.message")).replace("{name}", p.getName()).replace("{name}", p.getName()).replace("{rank}", getPrefix(p.getUniqueId())));
+                    all.sendMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.quit-message.message")).replace("{name}", p.getName()).replace("{name}", p.getName()).replace("{rank}", getPrefix(p.getUniqueId())).replace("{suffix}", getSuffix(p.getUniqueId())));
                 }
                 if (!all.hasPermission("vanish.see")) {
                     all.hidePlayer(Core.getInstance(), p);
@@ -171,12 +173,12 @@ public class UserManager implements IUser {
             for (Player all : Bukkit.getServer().getOnlinePlayers()) {
                 all.showPlayer(Core.getInstance(), p);
                 if (FileManager.get("config.yml").getBoolean("config.join-message.enabled")) {
-                    all.sendMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.join-message.message")).replace("{name}", p.getName()).replace("{name}", p.getName()).replace("{rank}", getPrefix(p.getUniqueId())));
+                    all.sendMessage(ChatUtils.format(FileManager.get("config.yml").getString("config.join-message.message")).replace("{name}", p.getName()).replace("{name}", p.getName()).replace("{rank}", getPrefix(p.getUniqueId())).replace("{suffix}", getSuffix(p.getUniqueId())));
                 }
                 if (all.hasPermission("vanish.see")) {
                     if (message) {
                         if (all != p) {
-                            all.sendMessage(ChatUtils.format(Core.getPrefix() + FileManager.get("config.yml").getString("config.messages.unvanish-all").replace("{name}", p.getName())));
+                            all.sendMessage(ChatUtils.format(Core.getPrefix() + FileManager.get("config.yml").getString("config.messages.unvanish-all").replace("{name}", p.getName())).replace("{suffix}", getSuffix(p.getUniqueId())));
                         }
                     }
                 }
@@ -225,13 +227,19 @@ public class UserManager implements IUser {
     public String getPlayerFormat(UUID uuid) {
         Player p = Bukkit.getServer().getPlayer(uuid);
         String userGroup = luckPerms.getPlayerAdapter(Player.class).getUser(p).getPrimaryGroup();
+
+        String displayName = p.getName();
+        if(donatorManager.hasDisplayName(DonatorManager.getPlayer(p.getUniqueId()))){
+            displayName = DonatorManager.getPlayer(p.getUniqueId()).getDisplayName();
+        }
+
         for (String formats : ChatManager.chatFormats.keySet()) {
             if (formats.equalsIgnoreCase(userGroup)) {
-                return ChatUtils.format(ChatManager.chatFormats.get(formats)).replace("{name}", p.getName()).replace("{prefix}", getPrefix(p.getUniqueId())).replace("{suffix}", getSuffix(p.getUniqueId()));
+                return ChatUtils.format(ChatManager.chatFormats.get(formats)).replace("{name}", displayName).replace("{prefix}", getPrefix(p.getUniqueId())).replace("{suffix}", getSuffix(p.getUniqueId()));
             }
         }
 
-        return ChatUtils.format(ChatManager.chatFormats.get("default").replace("{name}", p.getName()).replace("{prefix}", getPrefix(p.getUniqueId())).replace("{suffix}", getSuffix(p.getUniqueId())));
+        return ChatUtils.format(ChatManager.chatFormats.get("default").replace("{name}",  displayName).replace("{prefix}", getPrefix(p.getUniqueId())).replace("{suffix}", getSuffix(p.getUniqueId())));
     }
 
     public String getPlayerTabFormat(UUID uuid) {
@@ -256,5 +264,9 @@ public class UserManager implements IUser {
             case "creative":
                 return GameMode.CREATIVE;
         }
+    }
+
+    public String replace(Player p, String text){
+        return PlaceholderAPI.setPlaceholders(p, text);
     }
 }

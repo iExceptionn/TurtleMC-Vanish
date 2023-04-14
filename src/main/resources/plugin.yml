@@ -16,3 +16,13 @@ commands:
     description: [Userinfo command]
   vreload:
     description: [Reload command]
+  donatoradmin:
+    aliases: [dadmin, donadmin, da]
+    description: Donator Admin Command
+  name:
+    aliases: [nick]
+    description: Nickname command
+  realname:
+    aliases: [rn]
+  prefix:
+    aliases: [setprefix]

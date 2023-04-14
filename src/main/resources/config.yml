@@ -42,73 +42,27 @@ config:
 # {prefix} - Player rank prefix
 # {message} - Message
 chat:
-  founder:
-    format: "{prefix} &f{name} &8» &f{message}"
-    # For the tablist
-    prefix: "&cOwner &F"
-    suffix: ""
-    priority: 1
-    default: false
+  owner:
+    format: "{prefix}&7{name} &8» &f{message}"
   developer:
-    format: "{prefix} &f{name} &8» &f{message}"
-    # For the tablist
-    prefix: "&3Developer &f"
-    suffix: ""
-    priority: 2
-    default: false
+    format: "{prefix}&7{name} &8» &f{message}"
   admin:
-    format: "{prefix} &f{name} &8» &f{message}"
-    # For the tablist
-    prefix: "&9Admin &f"
-    suffix: ""
-    priority: 3
-    default: false
+    format: "{prefix}&7{name} &8» &f{message}"
   moderator:
-    format: "{prefix} &f{name} &8» &f{message}"
-    # For the tablist
-    prefix: "&bModerator &f"
-    suffix: ""
-    priority: 4
-    default: false
+    format: "{prefix}&7{name} &8» &f{message}"
   helper:
-    format: "{prefix} &f{name} &8» &f{message}"
-    # For the tablist
-    prefix: "&eHelper &f"
-    suffix: ""
-    priority: 5
-    default: false
-  god:
-    format: "{prefix} &7{name} &8» &f{message}"
-    # For the tablist
-    prefix: "&4&lGod &7"
-    suffix: ""
-    priority: 6
-    default: false
-  legend:
-    format: "{prefix} &7{name} &8» &f{message}"
-    # For the tablist
-    prefix: "&5&lLegend &7"
-    suffix: ""
-    priority: 7
-    default: false
-  elite:
-    format: "{prefix} &7{name} &8» &f{message}"
-    # For the tablist
-    prefix: "&6&lElite &7"
-    suffix: ""
-    priority: 8
-    default: false
-  vip:
-    format: "{prefix} &7{name} &8» &f{message}"
-    # For the tablist
-    prefix: "&2&lVIP &7"
-    suffix: ""
-    priority: 9
-    default: false
+    format: "{prefix}&7{name} &8» &f{message}"
+  builder:
+    format: "{prefix}&7{name} &8» &f{message}"
+  custom:
+    format: "{prefix}&7{name} &8» &f{message}"
+  zeus:
+    format: "{prefix}&7{name} &8» &f{message}"
+  apollo:
+    format: "{prefix}&7{name} &8» &f{message}"
+  hades:
+    format: "{prefix}&7{name} &8» &f{message}"
+  poseidon:
+    format: "{prefix}&7{name} &8» &f{message}"
   default:
     format: "&7{name} &8» &7{message}"
-    # For the tablist
-    prefix: "&7"
-    suffix: ""
-    priority: 10
-    default: true

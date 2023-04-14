@@ -1,7 +1,9 @@
 package me.flame.vanish.players.chatmanager.listeners;
 
 import me.flame.vanish.Core;
+import me.flame.vanish.donators.managers.DonatorManager;
 import me.flame.vanish.players.managers.UserManager;
+import me.flame.vanish.utils.ChatUtils;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -24,10 +26,11 @@ public class ChatListener implements Listener {
         Player p = e.getPlayer();
 
         for (Player online : Bukkit.getServer().getOnlinePlayers()) {
-            online.sendMessage(userManager.getPlayerFormat(p.getUniqueId()).replace("{message}", e.getMessage()));
+            online.sendMessage(userManager.getPlayerFormat(p.getUniqueId()).replace("{message}", e.getMessage()).replace("{oitc_player_level}", userManager.replace(p, "%oitc_getplayerlevel%")));
         }
 
-        Bukkit.getServer().getConsoleSender().sendMessage(userManager.getPlayerFormat(p.getUniqueId()).replace("{message}", e.getMessage()));
+        String realname = ChatUtils.format("&8[&7REAL-NAME: &e" + p.getName() + "&8]");
+        Bukkit.getServer().getConsoleSender().sendMessage(realname + " " + userManager.getPlayerFormat(p.getUniqueId()).replace("{message}", e.getMessage()).replace("{oitc_player_level}", userManager.replace(p, "%oitc_getplayerlevel%")));
         e.setCancelled(true);
     }
 

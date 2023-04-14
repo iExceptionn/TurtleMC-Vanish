@@ -32,6 +32,8 @@ public class ChatManager implements IChatManager {
 
     private static ChatManager chatManager;
 
+    private final UserManager userManager = new UserManager();
+
     public ChatManager() {
         chatManager = this;
     }
@@ -96,7 +98,7 @@ public class ChatManager implements IChatManager {
                 Integer weight = 10000 + rank.getPriority();
                 String name = weight + rank.getName();
                 String prefix = ChatUtils.format(rank.getPrefix());
-                String suffix = ChatUtils.format(rank.getSuffix());
+                String suffix = userManager.getSuffix(target.getUniqueId());
 
                 target.setPlayerListHeader(ChatUtils.format(FileManager.get("config.yml").getString("config.prefix.tablist-header")));
                 target.setPlayerListFooter(ChatUtils.format(FileManager.get("config.yml").getString("config.prefix.tablist-footer")));
@@ -138,21 +140,6 @@ public class ChatManager implements IChatManager {
         }
 
         Core.getInstance().getLogger().info("I have loaded " + tabFormats.size() + " tab formats.");
-    }
-
-    @Override
-    public void refreshTimer() {
-
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-
-                ChatManager.getInstance().setScoreboard();
-
-                refreshTimer();
-            }
-        }.runTaskLater(Core.getInstance(), 20 * 30);
     }
 
     public static ChatManager getInstance() {

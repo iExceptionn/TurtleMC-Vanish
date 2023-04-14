@@ -1,6 +1,12 @@
 package me.flame.vanish;
 
 import com.zaxxer.hikari.HikariDataSource;
+import me.flame.vanish.donators.commands.AdminCommand;
+import me.flame.vanish.donators.commands.DisplaynameCommand;
+import me.flame.vanish.donators.commands.PrefixCommand;
+import me.flame.vanish.donators.commands.RealnameCommand;
+import me.flame.vanish.donators.listeners.AdminInventoryListener;
+import me.flame.vanish.donators.managers.DonatorManager;
 import me.flame.vanish.players.chatmanager.ChatManager;
 import me.flame.vanish.players.chatmanager.listeners.ChatListener;
 import me.flame.vanish.players.commands.*;
@@ -11,10 +17,12 @@ import me.flame.vanish.players.managers.DatabaseManager;
 import me.flame.vanish.players.managers.UserManager;
 import me.flame.vanish.utils.ChatUtils;
 import me.flame.vanish.utils.FileManager;
+import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Core extends JavaPlugin implements Listener {
@@ -25,7 +33,13 @@ public final class Core extends JavaPlugin implements Listener {
     private final ChatManager chatManager = new ChatManager();
     private final UserManager userManager = new UserManager();
 
-    
+    private final DonatorManager donatorManager = new DonatorManager();
+
+    private static LuckPerms api;
+
+    public static LuckPerms getApi(){
+        return api;
+    }
 
 
     public static Core getInstance() {
@@ -35,8 +49,15 @@ public final class Core extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         // Plugin startup logic
+
+        RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+        if (provider != null) {
+            api = provider.getProvider();
+        }
+
         this.getLogger().info("Vanish Plugin started");
         FileManager.load(this, "config.yml");
+        FileManager.load(this, "donator.yml");
         instance = this;
 
 
@@ -50,10 +71,13 @@ public final class Core extends JavaPlugin implements Listener {
         registerEvents();
         registerCommands();
         chatManager.loadChatFormat();
-        chatManager.loadTabFormat();
 
-        ChatManager.getInstance().setScoreboard();
-        ChatManager.getInstance().refreshTimer();
+        for(Player player : Bukkit.getOnlinePlayers()){
+            if(player.hasPermission("vanish.vanish")){
+                userManager.loadStaff(player.getUniqueId());
+            }
+            donatorManager.loadUser(player.getUniqueId());
+        }
     }
 
     @Override
@@ -63,9 +87,9 @@ public final class Core extends JavaPlugin implements Listener {
         FileManager.configs.clear();
 
         ChatManager.chatFormats.clear();
-        ChatManager.tabFormats.clear();
         for (Player online : Bukkit.getServer().getOnlinePlayers()) {
             userManager.deleteUser(online.getUniqueId());
+            donatorManager.saveUser(online.getUniqueId());
         }
 
 
@@ -107,6 +131,7 @@ public final class Core extends JavaPlugin implements Listener {
         pluginManager.registerEvents(new VanishedEvents(), this);
         pluginManager.registerEvents(new InventoryListener(), this);
         pluginManager.registerEvents(new ChatListener(this), this);
+        pluginManager.registerEvents(new AdminInventoryListener(), this);
 
 
     }
@@ -119,9 +144,17 @@ public final class Core extends JavaPlugin implements Listener {
         return "";
     }
 
+    public static String getDonatorPrefix(){
+        return ChatUtils.format(FileManager.get("donator.yml").getString("config.prefix"));
+    }
+
     private void registerCommands() {
         getCommand("vanish").setExecutor(new VanishCommand());
         getCommand("userinfo").setExecutor(new UserInfoCommand());
         getCommand("vreload").setExecutor(new ReloadCommand());
+        getCommand("donatoradmin").setExecutor(new AdminCommand());
+        getCommand("name").setExecutor(new DisplaynameCommand());
+        getCommand("realname").setExecutor(new RealnameCommand());
+        getCommand("prefix").setExecutor(new PrefixCommand());
     }
 }

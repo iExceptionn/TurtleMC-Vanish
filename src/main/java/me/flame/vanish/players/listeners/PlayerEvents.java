@@ -1,6 +1,7 @@
 package me.flame.vanish.players.listeners;
 
 import me.flame.vanish.Core;
+import me.flame.vanish.donators.managers.DonatorManager;
 import me.flame.vanish.players.User;
 import me.flame.vanish.players.chatmanager.ChatManager;
 import me.flame.vanish.players.managers.UserManager;
@@ -17,16 +18,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerEvents implements Listener {
 
-    UserManager userManager = new UserManager();
+    private final UserManager userManager = new UserManager();
+    private final DonatorManager donatorManager = new DonatorManager();
+
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        donatorManager.loadUser(p.getUniqueId());
 
-        ChatManager.getInstance().setScoreboard();
-        //ChatManager.getInstance().setRank(p);
-        //ChatManager.getInstance().refreshAll();
-        //p.setPlayerListName(userManager.getPlayerTabFormat(p.getUniqueId()));
+        p.setPlayerListHeader(ChatUtils.format(FileManager.get("config.yml").getString("config.prefix.tablist-header")));
+        p.setPlayerListFooter(ChatUtils.format(FileManager.get("config.yml").getString("config.prefix.tablist-footer")));
         if (p.hasPermission("vanish.vanish")) {
             userManager.loadStaff(p.getUniqueId());
 
@@ -69,7 +71,7 @@ public class PlayerEvents implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-
+        donatorManager.saveUser(p.getUniqueId());
         User user = UserManager.getUser(p.getUniqueId());
         if (FileManager.get("config.yml").getBoolean("config.quit-message.enabled")) {
             if (user != null) {

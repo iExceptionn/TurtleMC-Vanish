@@ -27,9 +27,11 @@ public class VanishCommand implements CommandExecutor {
             if (p.hasPermission("vanish.vanish")) {
                 if (userManager.isVanished(p.getUniqueId())) {
                     userManager.unVanishPlayer(p.getUniqueId(), true);
+                    userManager.saveStaff(p.getUniqueId());
                     return true;
                 }
                 userManager.vanishPlayer(p.getUniqueId(), true);
+                userManager.saveStaff(p.getUniqueId());
                 return true;
             } else {
                 p.sendMessage(ChatUtils.format("&fYou can try and apply for staff in the Discord."));
