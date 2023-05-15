@@ -15,10 +15,14 @@ import me.flame.vanish.players.listeners.PlayerEvents;
 import me.flame.vanish.players.listeners.VanishedEvents;
 import me.flame.vanish.players.managers.DatabaseManager;
 import me.flame.vanish.players.managers.UserManager;
+import me.flame.vanish.tags.commands.TagsCommand;
+import me.flame.vanish.tags.listeners.TagsInventoryListener;
+import me.flame.vanish.tags.managers.TagManager;
 import me.flame.vanish.utils.ChatUtils;
 import me.flame.vanish.utils.FileManager;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
+import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -34,6 +38,7 @@ public final class Core extends JavaPlugin implements Listener {
     private final UserManager userManager = new UserManager();
 
     private final DonatorManager donatorManager = new DonatorManager();
+    private final TagManager tagManager = new TagManager();
 
     private static LuckPerms api;
 
@@ -58,6 +63,7 @@ public final class Core extends JavaPlugin implements Listener {
         this.getLogger().info("Vanish Plugin started");
         FileManager.load(this, "config.yml");
         FileManager.load(this, "donator.yml");
+        FileManager.load(this, "tags.yml");
         instance = this;
 
 
@@ -71,6 +77,7 @@ public final class Core extends JavaPlugin implements Listener {
         registerEvents();
         registerCommands();
         chatManager.loadChatFormat();
+        tagManager.loadTags();
 
         for(Player player : Bukkit.getOnlinePlayers()){
             if(player.hasPermission("vanish.vanish")){
@@ -87,12 +94,16 @@ public final class Core extends JavaPlugin implements Listener {
         FileManager.configs.clear();
 
         ChatManager.chatFormats.clear();
+
+        tagManager.loadedTags.clear();
         for (Player online : Bukkit.getServer().getOnlinePlayers()) {
             userManager.deleteUser(online.getUniqueId());
             donatorManager.saveUser(online.getUniqueId());
+
+            donatorManager.deleteDonator(DonatorManager.getPlayer(online.getUniqueId()));
         }
 
-
+        hikari.close();
     }
 
     public void connectMysql() {
@@ -132,6 +143,7 @@ public final class Core extends JavaPlugin implements Listener {
         pluginManager.registerEvents(new InventoryListener(), this);
         pluginManager.registerEvents(new ChatListener(this), this);
         pluginManager.registerEvents(new AdminInventoryListener(), this);
+        pluginManager.registerEvents(new TagsInventoryListener(), this);
 
 
     }
@@ -156,5 +168,6 @@ public final class Core extends JavaPlugin implements Listener {
         getCommand("name").setExecutor(new DisplaynameCommand());
         getCommand("realname").setExecutor(new RealnameCommand());
         getCommand("prefix").setExecutor(new PrefixCommand());
+        getCommand("tags").setExecutor(new TagsCommand());
     }
 }

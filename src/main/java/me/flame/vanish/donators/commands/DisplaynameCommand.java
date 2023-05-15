@@ -29,11 +29,11 @@ public class DisplaynameCommand implements CommandExecutor {
             }
             if(args.length == 1){
                 if(args[0].equalsIgnoreCase("reset")){
-                    donatorManager.setDisplayName(DonatorManager.getPlayer(p.getUniqueId()), p.getName());
+                    donatorManager.setDisplayName(DonatorManager.getPlayer(p.getUniqueId()), "none");
                     p.sendMessage(ChatUtils.format(Core.getDonatorPrefix() + "&7You nickname has been reset to &e" + p.getName() + "&7!"));
                     return true;
                 }
-                if(donatorManager.isDisplaynameAllowed(args[0])){
+                if(donatorManager.isDisplaynameAllowed(args[0], p)){
                     donatorManager.setDisplayName(DonatorManager.getPlayer(p.getUniqueId()), args[0]);
                     p.sendMessage(ChatUtils.format(Core.getDonatorPrefix() + "&7You have changed your nickname to &e" + DonatorManager.getPlayer(p.getUniqueId()).getDisplayName() + "&7!"));
                     return true;

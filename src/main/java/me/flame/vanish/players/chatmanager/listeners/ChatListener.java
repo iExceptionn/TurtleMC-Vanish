@@ -1,6 +1,7 @@
 package me.flame.vanish.players.chatmanager.listeners;
 
 import me.flame.vanish.Core;
+import me.flame.vanish.donators.Donator;
 import me.flame.vanish.donators.managers.DonatorManager;
 import me.flame.vanish.players.managers.UserManager;
 import me.flame.vanish.utils.ChatUtils;
@@ -25,12 +26,18 @@ public class ChatListener implements Listener {
     public void onChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
 
+
+        String message = e.getMessage();
+        if(p.hasPermission("chat.chatcolor")){
+            message = ChatUtils.format(e.getMessage());
+        }
+
         for (Player online : Bukkit.getServer().getOnlinePlayers()) {
-            online.sendMessage(userManager.getPlayerFormat(p.getUniqueId()).replace("{message}", e.getMessage()).replace("{oitc_player_level}", userManager.replace(p, "%oitc_getplayerlevel%")));
+            online.sendMessage(userManager.getPlayerFormat(p.getUniqueId()).replace("{message}", message).replace("{oitc_player_level}", userManager.replace(p, "%oitc_getplayerlevel%")));
         }
 
         String realname = ChatUtils.format("&8[&7REAL-NAME: &e" + p.getName() + "&8]");
-        Bukkit.getServer().getConsoleSender().sendMessage(realname + " " + userManager.getPlayerFormat(p.getUniqueId()).replace("{message}", e.getMessage()).replace("{oitc_player_level}", userManager.replace(p, "%oitc_getplayerlevel%")));
+        Bukkit.getServer().getConsoleSender().sendMessage(realname + " " + userManager.getPlayerFormat(p.getUniqueId()).replace("{message}", message).replace("{oitc_player_level}", userManager.replace(p, "%oitc_getplayerlevel%")));
         e.setCancelled(true);
     }
 

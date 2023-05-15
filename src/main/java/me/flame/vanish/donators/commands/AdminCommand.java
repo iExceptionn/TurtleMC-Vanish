@@ -83,12 +83,12 @@ public class AdminCommand implements CommandExecutor {
                         }
                         if (args.length == 3) {
                             Player player = Bukkit.getServer().getPlayer(args[1]);
-                            if (!donatorManager.isDisplaynameAllowed(args[2])) {
+                            if (!donatorManager.isDisplaynameAllowed(args[2], player)) {
                                 p.sendMessage(ChatUtils.format("&8[&c&l!&8] &7Displayname &c" + args[2] + " &7isn't allowed."));
                                 break;
                             }
                             if (args[2].equalsIgnoreCase("reset")) {
-                                DonatorManager.getPlayer(player.getUniqueId()).setDisplayName(player.getName());
+                                DonatorManager.getPlayer(player.getUniqueId()).setDisplayName("none");
                                 p.sendMessage(ChatUtils.format("&8[&c&l!&8] &7You have changed &c" + player.getName() + " &7displayname to &c" + player.getName()));
                                 player.sendMessage(ChatUtils.format(Core.getDonatorPrefix() + "&7You're displayname has been changed to &c" + player.getName() + " &7by a staffmember."));
                                 break;

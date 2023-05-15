@@ -29,10 +29,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class DonatorManager implements IDonatorManager {
     public static ArrayList<Donator> loadedPlayers = new ArrayList<>();
     private final LuckPerms luckPerms = Core.getApi();
+
+    private static ArrayList<String> disabledNames = new ArrayList<>();
+    private static ArrayList<String> disabledPrefix = new ArrayList<>();
 
     @Override
     public void registerUser(UUID uuid) {
@@ -63,6 +67,9 @@ public class DonatorManager implements IDonatorManager {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM `player_data` WHERE uuid = '" + uuid + "';");
             ResultSet resultSet = preparedStatement.executeQuery();
 
+            PreparedStatement preparedStatementGeneral = connection.prepareStatement("SELECT * FROM `general_data`;");
+            ResultSet resultSetGeneral = preparedStatementGeneral.executeQuery();
+
             if (resultSet.next()) {
                 Donator donator;
                 String name = Bukkit.getServer().getPlayer(uuid).getName();
@@ -73,11 +80,34 @@ public class DonatorManager implements IDonatorManager {
                 SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 Date date2 = sf.parse(date);
 
-                donator = new Donator(uuid, name, display_name, prefix, date2);
+                String unlockedTagsString = resultSet.getString("unlockedTags");
+                ArrayList<String> unlockedTagsList = new ArrayList<>();
+                String unlockedTags[] = unlockedTagsString.split(";");
+                for(String string : unlockedTags){
+                    unlockedTagsList.add(string);
+                }
+
+                String currentTag = resultSet.getString("currentTag");
+
+                donator = new Donator(uuid, name, display_name, prefix, date2, unlockedTagsList, currentTag);
 
                 loadedPlayers.add(donator);
             } else {
                 registerUser(uuid);
+            }
+
+            if(resultSetGeneral.next()){
+                String disablesNames = resultSetGeneral.getString("disabled-names");
+                String disablesNamesList[] = disablesNames.split(";");
+                for(String string : disablesNamesList){
+                    disabledNames.add(string);
+                }
+
+                String disabledPrefixes = resultSetGeneral.getString("disabled-prefixes");
+                String disabledPrefixesList[] = disabledPrefixes.split(";");
+                for(String string : disabledPrefixesList){
+                    disabledPrefix.add(string);
+                }
             }
 
             preparedStatement.close();
@@ -102,11 +132,13 @@ public class DonatorManager implements IDonatorManager {
             preparedStatement.executeUpdate("UPDATE `player_data` set `prefix` = '" + donator.getPrefix() + "' WHERE uuid = '" + uuid + "';");
             preparedStatement.executeUpdate("UPDATE `player_data` set `prefix-cooldown` = '" + sf.format(donator.getDate()) + "' WHERE uuid = '" + uuid + "';");
 
+            preparedStatement.executeUpdate("UPDATE `player_data` set `unlockedTags` = '" + donator.getUnlockedTags().stream().map(Object::toString).collect(Collectors.joining(";")) + "' WHERE uuid = '" + uuid + "';");
+            preparedStatement.executeUpdate("UPDATE `player_data` set `currentTag` = '" + donator.getCurrentTag() + "' WHERE uuid = '" + uuid + "';");
+
             preparedStatement.close();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            deleteDonator(donator);
             Core.getInstance().getLogger().info("Player with the name " + donator.getName() + " (" + donator.getDisplayName() + ") UUID: " + uuid + " has been saved.");
         }
     }
@@ -117,13 +149,15 @@ public class DonatorManager implements IDonatorManager {
     }
 
     @Override
-    public boolean isDisplaynameAllowed(String name) {
+    public boolean isDisplaynameAllowed(String name, Player p) {
 
-        List<String> disabledNames = FileManager.get("donator.yml").getStringList("config.disabled-names");
+        OfflinePlayer offlinePlayer2 = Bukkit.getOfflinePlayer(p.getUniqueId());
 
         for(OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()){
-            if(name.toLowerCase().contains(offlinePlayer.getName().toLowerCase())){
-                return false;
+            if(offlinePlayer != offlinePlayer2) {
+                if (name.toLowerCase().contains(offlinePlayer.getName().toLowerCase())) {
+                    return false;
+                }
             }
         }
 
@@ -142,8 +176,7 @@ public class DonatorManager implements IDonatorManager {
 
     @Override
     public boolean isPrefixAllowed(String name) {
-        List<String> disabledPrefixes = FileManager.get("donator.yml").getStringList("config.disabled-prefixes");
-        for(String string : disabledPrefixes){
+        for(String string : disabledPrefix){
             if(name.toLowerCase().contains(string)){
                 return false;
             }
@@ -168,17 +201,22 @@ public class DonatorManager implements IDonatorManager {
 
         p.sendMessage(ChatUtils.format(Core.getDonatorPrefix() + "&7You have changed you're prefix to: " + donator.getPrefix()));
         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, 1);
+
+        saveUser(p.getUniqueId());
     }
 
     @Override
     public void removePrefix(Donator donator) {
-        //Player p = Bukkit.getPlayer(donator.getUuid());
+        Player p = Bukkit.getPlayer(donator.getUuid());
 
         User user = luckPerms.getUserManager().getUser(donator.getUuid());
         user.data().remove(PrefixNode.builder(donator.getPrefix() + " &7", 62).build());
         luckPerms.getUserManager().saveUser(user);
 
+        donator.setPrefix("none");
         donator.setDate(new Date());
+
+        saveUser(p.getUniqueId());
     }
 
     @Override

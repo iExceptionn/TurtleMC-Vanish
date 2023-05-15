@@ -4,6 +4,7 @@ import me.flame.vanish.donators.managers.DonatorManager;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class Donator {
@@ -15,13 +16,17 @@ public class Donator {
     private UUID uuid;
     private String prefix;
     private Date date;
+    private List<String> unlockedTags;
+    private String currentTag;
 
-    public Donator(UUID uuid, String name, String displayName, String prefix, Date date){
+    public Donator(UUID uuid, String name, String displayName, String prefix, Date date, List<String> unlockedTags, String currentTag){
         this.uuid = uuid;
         this.name = name;
         this.displayName = displayName;
         this.prefix = prefix;
         this.date = date;
+        this.unlockedTags = unlockedTags;
+        this.currentTag = currentTag;
     }
 
     public String getName() {
@@ -62,5 +67,21 @@ public class Donator {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public List<String> getUnlockedTags() {
+        return unlockedTags;
+    }
+
+    public void setUnlockedTags(List<String> unlockedTags) {
+        this.unlockedTags = unlockedTags;
+    }
+
+    public String getCurrentTag() {
+        return currentTag;
+    }
+
+    public void setCurrentTag(String currentTag) {
+        this.currentTag = currentTag;
     }
 }

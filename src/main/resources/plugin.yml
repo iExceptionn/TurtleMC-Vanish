@@ -26,3 +26,5 @@ commands:
     aliases: [rn]
   prefix:
     aliases: [setprefix]
+  tags:
+    aliases: [tag]

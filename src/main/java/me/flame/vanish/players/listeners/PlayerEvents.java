@@ -72,6 +72,7 @@ public class PlayerEvents implements Listener {
     public void onLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         donatorManager.saveUser(p.getUniqueId());
+        donatorManager.deleteDonator(DonatorManager.getPlayer(p.getUniqueId()));
         User user = UserManager.getUser(p.getUniqueId());
         if (FileManager.get("config.yml").getBoolean("config.quit-message.enabled")) {
             if (user != null) {

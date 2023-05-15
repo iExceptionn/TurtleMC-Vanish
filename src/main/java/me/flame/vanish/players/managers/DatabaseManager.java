@@ -15,6 +15,7 @@ public class DatabaseManager  {
 
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS `staff_data` (`uuid` varchar(36) NOT NULL, `name` varchar(36) NOT NULL, `vanished` BOOLEAN NOT NULL, `gamemode` varchar(36) NOT NULL,  `nightvision` BOOLEAN NOT NULL, PRIMARY KEY (`uuid`))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS `player_data` (`UUID` varchar(36) NOT NULL, `name` varchar(360) NOT NULL, `display_name` varchar(360) NOT NULL, `prefix` varchar(36) NOT NULL, `prefix-cooldown` varchar(36) NOT NULL, PRIMARY KEY (`UUID`))");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `general_data` (`disabled-names` varchar(360) NOT NULL, `disabled-prefixes` varchar(360) NOT NULL, PRIMARY KEY (`disabled-names`))");
 
         } catch (SQLException e){
             Core.getInstance().getLogger().info("Failed to connect to a database, plugin disabled.");

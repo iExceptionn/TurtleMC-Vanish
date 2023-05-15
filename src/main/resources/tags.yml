@@ -1,0 +1,29 @@
+###########################################
+##    © Plugin created by iException ©    #
+###########################################
+
+config:
+  prefix: "&8[&cTags&8]"
+  messages:
+    removed-tag: "%prefix% &7You have unselected the %tag_prefix% &7tag."
+    selected-tag: "%prefix% &7You have selected the &f%tag% tag &7with prefix %tag_prefix%."
+
+tags:
+  beta:
+    prefix: "&8[&5Beta&8]"
+    lore:
+      - "&7"
+      - " &7&oI was a beta tester for the"
+      - " &7&o first release of the server."
+      - "&7"
+    visible: true # Is the tag visible in the menu.
+    enabled: false # Are players able to get this tag.
+  og:
+    prefix: "&8[&4&lOG&8]"
+    lore:
+      - "&7"
+      - " &7&oI am playing this server"
+      - " &7&ofrom the very beginning."
+      - "&7"
+    visible: true # Is the tag visible in the menu.
+    enabled: false # Are players able to get this tag.

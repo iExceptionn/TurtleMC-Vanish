@@ -2,6 +2,7 @@ package me.flame.vanish.players.managers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.flame.vanish.Core;
+import me.flame.vanish.donators.Donator;
 import me.flame.vanish.donators.managers.DonatorManager;
 import me.flame.vanish.players.User;
 import me.flame.vanish.players.chatmanager.ChatManager;
@@ -224,22 +225,33 @@ public class UserManager implements IUser {
 
         return ChatUtils.format(cachedMetaData.getSuffix());
     }
+
     public String getPlayerFormat(UUID uuid) {
         Player p = Bukkit.getServer().getPlayer(uuid);
         String userGroup = luckPerms.getPlayerAdapter(Player.class).getUser(p).getPrimaryGroup();
 
         String displayName = p.getName();
-        if(donatorManager.hasDisplayName(DonatorManager.getPlayer(p.getUniqueId()))){
-            displayName = DonatorManager.getPlayer(p.getUniqueId()).getDisplayName();
+        if (donatorManager.hasDisplayName(DonatorManager.getPlayer(p.getUniqueId()))) {
+            if (p.hasPermission("donator.displayname.colors")) {
+                displayName = ChatUtils.format(DonatorManager.getPlayer(p.getUniqueId()).getDisplayName());
+            } else {
+                displayName = DonatorManager.getPlayer(p.getUniqueId()).getDisplayName();
+            }
+        }
+
+        Donator donator = DonatorManager.getPlayer(p.getUniqueId());
+        String playerTag = ChatUtils.format(donator.getCurrentTag() + " &7");
+        if(donator.getCurrentTag().equalsIgnoreCase("none")){
+            playerTag = "";
         }
 
         for (String formats : ChatManager.chatFormats.keySet()) {
             if (formats.equalsIgnoreCase(userGroup)) {
-                return ChatUtils.format(ChatManager.chatFormats.get(formats)).replace("{name}", displayName).replace("{prefix}", getPrefix(p.getUniqueId())).replace("{suffix}", getSuffix(p.getUniqueId()));
+                return ChatUtils.format(ChatManager.chatFormats.get(formats)).replace("{name}", displayName).replace("{prefix}", getPrefix(p.getUniqueId())).replace("{suffix}", getSuffix(p.getUniqueId())).replace("{player_tag}", playerTag);
             }
         }
 
-        return ChatUtils.format(ChatManager.chatFormats.get("default").replace("{name}",  displayName).replace("{prefix}", getPrefix(p.getUniqueId())).replace("{suffix}", getSuffix(p.getUniqueId())));
+        return ChatUtils.format(ChatManager.chatFormats.get("default").replace("{name}", displayName).replace("{prefix}", getPrefix(p.getUniqueId())).replace("{suffix}", getSuffix(p.getUniqueId())).replace("{player_tag}", playerTag));
     }
 
     public String getPlayerTabFormat(UUID uuid) {
@@ -266,7 +278,7 @@ public class UserManager implements IUser {
         }
     }
 
-    public String replace(Player p, String text){
+    public String replace(Player p, String text) {
         return PlaceholderAPI.setPlaceholders(p, text);
     }
 }
